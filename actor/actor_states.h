@@ -36,10 +36,9 @@ void set_idle(Actor *actor)
     if  (fabs(actor->body.velocity.x) < 1 && fabs(actor->body.velocity.y) < 1){
 
         vector3_init(&actor->body.velocity);
-    
+        actor->horizontal_speed = 0;    
         actor->target_yaw = actor->body.rotation.z;
         actor->state = STAND_IDLE;
-
         actor->previous_state = STAND_IDLE;
     }
     
@@ -49,9 +48,7 @@ void set_idle(Actor *actor)
 void set_walking(Actor *actor)
 {
     actor_setAcceleration (actor, actor->settings.walk_target_speed, actor->settings.walk_acceleration_rate);
-
     if (actor->state == WALKING) return;
-    
     actor->state = WALKING;
     actor->previous_state = WALKING;
 }
@@ -60,9 +57,7 @@ void set_walking(Actor *actor)
 void set_running(Actor *actor)
 {
     actor_setAcceleration (actor, actor->settings.run_target_speed, actor->settings.run_acceleration_rate);
-
     if (actor->state == RUNNING) return;
-    
     actor->state = RUNNING;
     actor->previous_state = RUNNING;
 }
@@ -71,9 +66,7 @@ void set_running(Actor *actor)
 void set_sprinting(Actor *actor)
 {
     actor_setAcceleration (actor, actor->settings.sprint_target_speed, actor->settings.run_acceleration_rate);
-
     if (actor->state == SPRINTING) return;
-    
     actor->state = SPRINTING;
     actor->previous_state = SPRINTING;
 }

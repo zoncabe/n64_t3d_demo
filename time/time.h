@@ -40,9 +40,9 @@ void time_setData(TimeData *time)
 {
     time->current_frame_ms = get_ticks_ms();
 
-    time->current_frame_s = time->current_frame_ms / 1000.0f;
+    time->current_frame_s = time->current_frame_ms * 0.001f;
 
-    time->frame_time_s = (time->current_frame_ms - time->last_frame_ms) / 1000.0f;
+    time->frame_time_s = (time->current_frame_ms - time->last_frame_ms) * 0.001f;
 
     time->frame_rate = 1 / time->frame_time_s;
 

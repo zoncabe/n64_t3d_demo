@@ -61,6 +61,8 @@ typedef struct {
 	rspq_block_t *dl;
 	T3DMat4FP *modelMat;
 	T3DModel *model;
+	T3DSkeleton armature;
+	T3DSkeleton blending_armature;
 	
 	Vector3 scale;
 	RigidBody body;
@@ -95,7 +97,7 @@ Actor actor_create(uint32_t id, const char *model_path)
 
         .id = id,
 		.model = t3d_model_load(model_path),
-        .modelMat = malloc_uncached(sizeof(T3DMat4FP)), // needed for t3d
+        .modelMat = malloc_uncached(sizeof(T3DMat4FP)),
 
         .scale = {1.0f, 1.0f, 1.0f},
         
@@ -128,8 +130,12 @@ Actor actor_create(uint32_t id, const char *model_path)
         },
     };
 
+	actor.armature = t3d_skeleton_create(actor.model);
+	actor.blending_armature = t3d_skeleton_clone(&actor.armature, false);
+
     rspq_block_begin();
-    t3d_model_draw(actor.model);
+    rdpq_set_prim_color(RGBA32(255, 255, 255, 255));
+    t3d_model_draw_skinned(actor.model, &actor.armature);
     actor.dl = rspq_block_end();
 
     t3d_mat4fp_identity(actor.modelMat);
