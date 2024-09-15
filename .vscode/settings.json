@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "physics_config.h": "c",
-        "math_common.h": "c"
+        "math_common.h": "c",
+        "actor_states.h": "c",
+        "actor_movement.h": "c"
     }
 }

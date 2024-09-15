@@ -3,14 +3,14 @@
 
 // collision types
 
-#define SPHERE_A 1
-#define AABB_A 2
-#define BOX_A 3
-#define PLANE_A 4
-#define RAY_A 5
-#define CAPSULE_A 6
-#define TERRAIN_A 7
-#define MESH_A 8
+#define SPHERE 1
+#define AABB 2
+#define BOX 3
+#define PLANE 4
+#define RAY 5
+#define CAPSULE 6
+#define TERRAIN 7
+#define MESH 8
 
 // structures
 

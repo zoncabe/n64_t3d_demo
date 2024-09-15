@@ -2,165 +2,113 @@
 #define ACTORSTATES_H
 
 
-#include "actor_movement.h"
-
-#define ACTOR_GRAVITY -6000
+#define STAND_IDLE 1
+#define WALKING 2
+#define RUNNING 3
+#define SPRINTING 4
+#define ROLL 5
+#define JUMP 6
+#define FALLING 7
 
 
 // function prototypes
 
+void actorState_setIdle (Actor *actor);
 
-void set_idle (Actor *actor);
-
-void set_walking (Actor *actor);
+void actorState_setWalking (Actor *actor);
             
-void set_running (Actor *actor);
+void actorState_setRunning (Actor *actor);
             
-void set_sprinting (Actor *actor);
+void actorState_setSprinting (Actor *actor);
 
-void set_jump (Actor *actor);
+void actorState_setJump (Actor *actor);
 
-void set_falling (Actor *actor);
+void actorState_setFalling (Actor *actor);
 
-
-void actor_setState (Actor *actor, ActorState state);
-
+void actor_setState (Actor *actor, uint8_t state);
 
 
-void set_idle(Actor *actor)
+void actorState_setIdle(Actor *actor)
 {
     if (actor->state == STAND_IDLE) return;
-
-    actor_setStopingAcceleration(actor);
-    
-    if  (fabs(actor->body.velocity.x) < 1 && fabs(actor->body.velocity.y) < 1){
-
-        vector3_init(&actor->body.velocity);
-        actor->horizontal_speed = 0;    
-        actor->target_yaw = actor->body.rotation.z;
-        actor->state = STAND_IDLE;
-        actor->previous_state = STAND_IDLE;
-    }
+    actor->previous_state = actor->state;
+    actor->state = STAND_IDLE;
+    actor->locomotion_state = STAND_IDLE;
     
 }
 
-
-void set_walking(Actor *actor)
+void actorState_setWalking(Actor *actor)
 {
-    actor_setAcceleration (actor, actor->settings.walk_target_speed, actor->settings.walk_acceleration_rate);
     if (actor->state == WALKING) return;
+    actor->previous_state = actor->state;
     actor->state = WALKING;
-    actor->previous_state = WALKING;
+    actor->locomotion_state = WALKING;
 }
 
-
-void set_running(Actor *actor)
+void actorState_setRunning(Actor *actor)
 {
-    actor_setAcceleration (actor, actor->settings.run_target_speed, actor->settings.run_acceleration_rate);
     if (actor->state == RUNNING) return;
+    actor->previous_state = actor->state;
     actor->state = RUNNING;
-    actor->previous_state = RUNNING;
+    actor->locomotion_state = RUNNING;
 }
 
-
-void set_sprinting(Actor *actor)
+void actorState_setSprinting(Actor *actor)
 {
-    actor_setAcceleration (actor, actor->settings.sprint_target_speed, actor->settings.run_acceleration_rate);
     if (actor->state == SPRINTING) return;
+    actor->previous_state = actor->state;
     actor->state = SPRINTING;
-    actor->previous_state = SPRINTING;
+    actor->locomotion_state = SPRINTING;
 }
 
-
-void set_jump(Actor *actor) 
-{       
-    if (actor->input.jump_hold && !actor->input.jump_released && actor->input.jump_time_held < actor->settings.jump_timer_max){
-
-        actor_setJumpAcceleration (actor, actor->settings.jump_target_speed, actor->settings.jump_acceleration_rate);
-        actor_setAcceleration (actor, actor->horizontal_speed, actor->settings.aerial_control_rate);
-    } 
-    
-    else if (actor->body.velocity.z > 0){
-
-        actor_setAcceleration (actor, actor->horizontal_speed, actor->settings.aerial_control_rate);
-        actor->body.acceleration.z = ACTOR_GRAVITY;
-    }
-    
-    else {
-
-        actor_setState(actor, FALLING);
-        actor->input.jump_time_held = 0;
-        return;
-    }
-
+void actorState_setJump(Actor *actor) 
+{
     if (actor->state == JUMP) return;
     
+    actor->previous_state = actor->state;
     actor->state = JUMP;
     actor->grounded = 0;
     //actor->grounding_height = -FLT_MAX;
 }
 
-
-void set_falling (Actor *actor)
-{   
-    actor->grounded = 0;
-    actor_setAcceleration (actor, actor->horizontal_speed, actor->settings.aerial_control_rate);
-    actor->body.acceleration.z = ACTOR_GRAVITY;
-
-    if (actor->body.position.z <= actor->grounding_height) {
-
-        actor->grounded = 1;
-        actor->body.acceleration.z = 0;
-        actor->body.velocity.z = 0;
-        actor->body.position.z = actor->grounding_height;
-
-        actor_setState (actor, actor->previous_state);
-        //actor->previous_state = FALLING;
-
-        return;
-    }
-
-
+void actorState_setFalling (Actor *actor)
+{
     if (actor->state == FALLING ) return;
 
+    actor->previous_state = actor->state;
     actor->state = FALLING;
     //actor->grounding_height = -FLT_MAX;
 }
 
-
-
-void actor_setState(Actor *actor, ActorState state) 
+void actor_setState(Actor *actor, uint8_t state) 
 {
     switch(state) {
-
-        case EMPTY: {
-            break;
-        } 
+        
         case STAND_IDLE: {
-            set_idle (actor);
+            actorState_setIdle (actor);
             break;
         }
         case WALKING: {
-            set_walking (actor);
+            actorState_setWalking (actor);
             break;
         }
         case RUNNING: {
-            set_running (actor);
+            actorState_setRunning (actor);
             break;
         }
         case SPRINTING: {
-            set_sprinting (actor);
+            actorState_setSprinting (actor);
             break;
         }
         case ROLL: {
             break;
         }
         case JUMP: {
-            set_jump (actor);
+            actorState_setJump (actor);
             break;
         }
         case FALLING: {
-            set_falling (actor);
+            actorState_setFalling (actor);
             break;
         }   
     }

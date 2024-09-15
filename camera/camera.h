@@ -93,8 +93,8 @@ void camera_set(Camera *camera, Screen* screen);
 Camera camera_create()
 {
     Camera camera = {
-        .distance_from_barycenter = 200,
-        .target_distance = 200,
+        .distance_from_barycenter = 250,
+        .target_distance = 250,
         .angle_around_barycenter = 0,
         .pitch = 15,
         .offset_angle = 45,
@@ -110,8 +110,8 @@ Camera camera_create()
         	.zoom_acceleration_rate = 60,
         	.zoom_deceleration_rate = 20,
         	.zoom_max_speed = 300,
-        	.distance_from_baricenter = 200,
-        	.field_of_view = 65,
+        	.distance_from_baricenter = 250,
+        	.field_of_view = 60,
 	    	.field_of_view_aim = 45,
         	.offset_acceleration_rate = 25,
         	.offset_deceleration_rate = 45,
