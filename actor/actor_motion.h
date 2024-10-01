@@ -146,12 +146,33 @@ void actorMotion_setFalling(Actor *actor)
 
 void actor_setMotion(Actor *actor, float frame_time)
 {
-    if (actor->state == STAND_IDLE) actorMotion_setIdle(actor);
-    else if (actor->state == WALKING) actorMotion_setWalking(actor);
-    else if (actor->state == RUNNING) actorMotion_setRunning(actor);
-    else if (actor->state == SPRINTING) actorMotion_setSprinting(actor);
-    else if (actor->state == JUMP) actorMotion_setJump(actor);
-    else if (actor->state == FALLING) actorMotion_setFalling(actor);
+   switch (actor->state) {
+    
+        case STAND_IDLE: {
+            actorMotion_setIdle(actor);
+            break;
+        }
+        case WALKING: {
+            actorMotion_setWalking(actor);
+            break;
+        }
+        case RUNNING: {
+            actorMotion_setRunning(actor);
+            break;
+        }
+        case SPRINTING: {
+            actorMotion_setSprinting(actor);
+            break;
+        }
+        case JUMP: {
+            actorMotion_setJump(actor);
+            break;
+        }
+        case FALLING: {
+            actorMotion_setFalling(actor);
+            break;
+        }
+    }
 
 	actorMotion_integrate(actor, frame_time);
 }
